@@ -21,7 +21,7 @@ Or install it yourself as:
 The simplest way to do this is
 
 ``` ruby
-require 'extended-markdown-filter'
+require 'page-toc-filter'
 ```
 
 Then, place this filter *after* you've rendered your content through the Markdown and TOC filters:
