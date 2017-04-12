@@ -14,15 +14,33 @@ class PageTocFilter < HTML::Pipeline::Filter
   end
 
   def page_toc_filter(doc)
-    toc = ''
-    levels = context[:toc_levels] || 'h2'
+    levels = doc.search(context[:toc_levels] || 'h2')
+    return "" if levels.empty?
 
-    doc.search(levels).each do |node|
+    toc = %(<ul id="markdown-toc">\n)
+    last_level = nil
+
+    levels.each do |node|
+      current_level = node.name.match(/h(\d)/)[1]
+
       text = node.text
       id = node.child['id']
-      toc << %(<li><a href="##{id}" id="markdown-toc-#{id}">#{text}</a></li>\n)
+
+      link = %(<a href="##{id}" id="markdown-toc-#{id}">#{text}</a>)
+
+      if last_level.nil?
+        toc << %(<li>\n#{link}\n)
+      elsif current_level == last_level
+        toc << %(</li><li>\n#{link}\n)
+      elsif current_level > last_level
+        toc << %(<ul><li>#{link}\n)
+      elsif current_level < last_level
+        toc << %(</li></ul><li>#{link}\n)
+      end
+
+      last_level = current_level
     end
-    toc = %(<ul id="markdown-toc">\n#{toc}</ul>) unless toc.empty?
+    toc << %(</li></ul>)
     toc
   end
 end
