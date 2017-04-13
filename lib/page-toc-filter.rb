@@ -19,6 +19,7 @@ class PageTocFilter < HTML::Pipeline::Filter
 
     toc = %(<ul id="markdown-toc">\n)
     last_level = nil
+    depth = 1
 
     levels.each do |node|
       current_level = node.name.match(/h(\d)/)[1]
@@ -33,14 +34,16 @@ class PageTocFilter < HTML::Pipeline::Filter
       elsif current_level == last_level
         toc << %(</li>\n<li>#{link})
       elsif current_level > last_level
-        toc << %(<ul><li>#{link})
+        depth += 1
+        toc << %(\n<ul><li>#{link})
       elsif current_level < last_level
+        depth -= 1
         toc << %(</li></ul>\n<li>#{link})
       end
 
       last_level = current_level
     end
-    toc << %(</li>\n</ul>)
+    toc << %(</li>\n</ul>) * depth
     toc
   end
 end
