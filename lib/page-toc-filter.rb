@@ -29,18 +29,18 @@ class PageTocFilter < HTML::Pipeline::Filter
       link = %(<a href="##{id}" id="markdown-toc-#{id}">#{text}</a>)
 
       if last_level.nil?
-        toc << %(<li>\n#{link}\n)
+        toc << %(<li>#{link})
       elsif current_level == last_level
-        toc << %(</li><li>\n#{link}\n)
+        toc << %(</li>\n<li>#{link})
       elsif current_level > last_level
-        toc << %(<ul><li>#{link}\n)
+        toc << %(<ul><li>#{link})
       elsif current_level < last_level
-        toc << %(</li></ul><li>#{link}\n)
+        toc << %(</li></ul>\n<li>#{link})
       end
 
       last_level = current_level
     end
-    toc << %(</li></ul>)
+    toc << %(</li>\n</ul>)
     toc
   end
 end
