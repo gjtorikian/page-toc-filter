@@ -2,6 +2,9 @@ require 'bundler/setup'
 require_relative '../lib/page-toc-filter'
 require 'minitest/autorun'
 require 'minitest/pride'
+require 'markup_validity'
+
+include MarkupValidity::Assertions
 
 def pipeline(content, context = {})
   pipeline = HTML::Pipeline.new([

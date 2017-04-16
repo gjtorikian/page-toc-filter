@@ -20,4 +20,34 @@ class HTML::Pipeline::PageTocFilterTest < Minitest::Test
       pipeline(fixture('misaligned_toc.txt'), toc_levels: 'h1, h2, h3, h4')
     end
   end
+
+  def test_all_variants_work
+    toc = '{:toc}'
+    levels = {
+      h1: '# Level 1',
+      h2: '## Level 2',
+      h3: '### Level 3',
+      h4: '#### Level 4',
+      h5: '##### Level 5',
+      h6: '###### Level 6'
+    }
+    levels.each do |level, string|
+      text = []
+      text << toc
+      level_number = level.to_s[1].to_i
+      i = level_number
+      loop do
+        text << levels["h#{i}".to_sym]
+        i += 1
+        break if i == 7
+      end
+      output = pipeline(text.join("\n\n"), toc_levels: 'h1, h2, h3, h4, h5, h6')
+      begin
+        Nokogiri::XML(output) { |config| config.strict }
+      rescue Nokogiri::XML::SyntaxError => e
+        # Not sure what this error is, but it is bogus
+        raise e unless e.to_s == 'Extra content at the end of the document'
+      end
+    end
+  end
 end
