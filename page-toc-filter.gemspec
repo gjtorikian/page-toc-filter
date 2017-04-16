@@ -22,4 +22,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake'
   spec.add_development_dependency 'minitest', '~> 5.8'
   spec.add_development_dependency 'github-markdown', '~> 0.6.3'
+  spec.add_development_dependency 'markup_validity', '~> 1.0'
 end

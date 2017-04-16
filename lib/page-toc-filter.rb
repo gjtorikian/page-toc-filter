@@ -14,15 +14,41 @@ class PageTocFilter < HTML::Pipeline::Filter
   end
 
   def page_toc_filter(doc)
-    toc = ''
-    levels = context[:toc_levels] || 'h2'
+    levels = doc.search(context[:toc_levels] || 'h2')
+    return '' if levels.empty?
 
-    doc.search(levels).each do |node|
+    toc = %(<ul id="markdown-toc">\n)
+    last_level = nil
+    depth = 1
+
+    levels.each do |node|
+      current_level = node.name.match(/h(\d)/)[1]
+
       text = node.text
       id = node.child['id']
-      toc << %(<li><a href="##{id}" id="markdown-toc-#{id}">#{text}</a></li>\n)
+
+      link = %(<a href="##{id}" id="markdown-toc-#{id}">#{text}</a>)
+
+      if last_level.nil?
+        toc << %(<li>#{link})
+      elsif current_level == last_level
+        toc << %(</li>\n<li>#{link})
+      elsif current_level > last_level
+        depth += 1
+        toc << %(\n<ul><li>#{link})
+      elsif current_level < last_level
+        depth -= 1
+        toc << %(</li></ul>\n<li>#{link})
+      end
+
+      last_level = current_level
     end
-    toc = %(<ul id="markdown-toc">\n#{toc}</ul>) unless toc.empty?
+
+    if depth < 0
+      raise ArgumentError, 'Your headings are not in sequential order. It seems that a lower heading level (like an h4) is being defined before a higher heading level (like an h1).'
+    end
+
+    toc << %(</li>\n</ul>) * depth
     toc
   end
 end
