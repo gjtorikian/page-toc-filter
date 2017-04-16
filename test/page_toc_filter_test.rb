@@ -6,12 +6,18 @@ class HTML::Pipeline::PageTocFilterTest < Minitest::Test
   end
 
   def test_plain_page_toc
-    output = pipeline(fixture('plain_toc.txt'), {})
+    output = pipeline(fixture('plain_toc.txt'))
     assert_equal fixture('plain_toc.html').chomp, output.chomp
   end
 
   def test_toc_levels
-    output = pipeline(fixture('toc_levels.txt'), { :toc_levels => 'h2, h3' })
+    output = pipeline(fixture('toc_levels.txt'), toc_levels: 'h2, h3')
     assert_equal fixture('toc_levels.html').chomp, output.chomp
+  end
+
+  def test_misaligned_toc
+    assert_raises ArgumentError do
+      pipeline(fixture('misaligned_toc.txt'), toc_levels: 'h1, h2, h3, h4')
+    end
   end
 end

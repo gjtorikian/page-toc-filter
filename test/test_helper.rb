@@ -3,7 +3,7 @@ require_relative '../lib/page-toc-filter'
 require 'minitest/autorun'
 require 'minitest/pride'
 
-def pipeline(content, context)
+def pipeline(content, context = {})
   pipeline = HTML::Pipeline.new([
     HTML::Pipeline::MarkdownFilter,
     HTML::Pipeline::TableOfContentsFilter,
