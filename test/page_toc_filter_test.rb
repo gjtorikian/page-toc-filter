@@ -16,9 +16,9 @@ class HTML::Pipeline::PageTocFilterTest < Minitest::Test
   end
 
   def test_misaligned_toc
-    #assert_raises ArgumentError do
-    #  pipeline(fixture('misaligned_toc.txt'), toc_levels: 'h1, h2, h3, h4')
-    #end
+    assert_raises ArgumentError do
+      pipeline(fixture('misaligned_toc.txt'), toc_levels: 'h1, h2, h3, h4')
+    end
   end
 
   def test_all_variants_work
