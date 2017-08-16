@@ -18,7 +18,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'html-pipeline', '~> 2.0'
   spec.add_development_dependency 'nokogiri', '~> 1.8.0'
-  spec.add_development_dependency 'markup_validity'
 
   spec.add_development_dependency 'rake'
   spec.add_development_dependency 'minitest', '~> 5.8'
